@@ -21,11 +21,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const hashedPassowrd = await hashPassword(password);
+     const hashedPassword = await hashPassword(password)
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashPassword,
+        password: hashedPassword,
         name: name || null,
       },
       select: {
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         name: true,
         role: true,
       },
-    });
+    })
 
     const token = generateToken(user.id);
     return NextResponse.json({ user, token }, { status: 201 });
