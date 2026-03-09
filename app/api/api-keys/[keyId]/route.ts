@@ -1,7 +1,6 @@
-import { authenticateRequest } from "@/lib/auth-middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { NextResponse, type NextRequest } from "next/server";
-import { parseEnv } from "util";
+import { authenticateRequest } from "@/lib/auth-middleware";
 
 export async function DELETE(
   req: NextRequest,
@@ -15,14 +14,14 @@ export async function DELETE(
   const { keyId } = await params;
 
   try {
-    const apikey = await prisma.apiKey.findFirst({
+    const apiKey = await prisma.apiKey.findFirst({
       where: {
         id: keyId,
         userId: auth.user.id,
       },
     });
 
-    if (!apikey) {
+    if (!apiKey) {
       return NextResponse.json({ error: "API key not found" }, { status: 404 });
     }
 
