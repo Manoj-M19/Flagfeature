@@ -1,20 +1,24 @@
-import { authenticateRequest } from "@/lib/auth-middleware";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { NextResponse, type NextRequest } from "next/server";
+import { authenticateRequest } from "@/lib/auth-middleware";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { projectId: string } },
+  { params }: { params: Promise<{ projectId: string }> },
 ) {
   const auth = await authenticateRequest(req);
   if ("error" in auth) {
     return NextResponse.json({ error: auth.error }, { status: auth.status });
   }
 
+  const { projectId } = await params;
+
   try {
+    console.log("GET /api/projects/[projectId] - Fetching project:", projectId);
+
     const project = await prisma.project.findFirst({
       where: {
-        id: params.projectId,
+        id: projectId,
         members: {
           some: {
             userId: auth.user.id,
@@ -46,9 +50,14 @@ export async function GET(
     });
 
     if (!project) {
-      return NextResponse.json({ error: "project not found" }, { status: 404 });
+      console.log("GET /api/projects/[projectId] - Project not found");
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
     }
 
+    console.log(
+      "GET /api/projects/[projectId] - Success, flags:",
+      project.flags.length,
+    );
     return NextResponse.json({ project });
   } catch (error) {
     console.error("Get project error:", error);
