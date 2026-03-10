@@ -25,8 +25,8 @@ export default function DashboardLayout({
     }
   }, [mounted, isAuthenticated, router])
 
-  if (!mounted) return null
-  if (!isAuthenticated()) return null
+  if (!mounted) return null;
+  if (!isAuthenticated()) return null;
 
   return (
     <SocketProvider>
@@ -97,7 +97,7 @@ export default function DashboardLayout({
                     if (text) { text.style.opacity = '0'; text.style.width = '0%' }
                   }}
                   onMouseDown={(e) => { e.currentTarget.style.transform = 'translate(2px,2px)' }}
-                  onMouseUp={(e)   => { e.currentTarget.style.transform = 'translate(0,0)' }}
+                  onMouseUp={(e) => { e.currentTarget.style.transform = 'translate(0,0)' }}
                 >
                   {/* Icon */}
                   <span
