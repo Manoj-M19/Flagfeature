@@ -344,7 +344,7 @@ export default function DashboardPage() {
               <p className="text-gray-400 mb-6">Create your first project to start managing feature flags</p>
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium"
+                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium cursor-pointer"
               >
                 Create Your First Project
               </button>
