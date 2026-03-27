@@ -48,7 +48,7 @@ export default function DashboardLayout({
                   <Link href="/dashboard/settings" className="text-sm text-gray-300 hover:text-white transition font-medium">
                     API Keys
                   </Link>
-                  <Link href="/dashboard/docs" className="text-sm text-gray-300 hover:text-white transition font-medium">
+                  <Link href="/docs" className="text-sm text-gray-300 hover:text-white transition font-medium">
                     Docs
                   </Link>
                 </div>
@@ -73,7 +73,7 @@ export default function DashboardLayout({
                     border: 'none',
                     cursor: 'pointer',
                     overflow: 'hidden',
-                    background: 'linear-linear(to right, #3b82f6, #ef4444)',
+                    background: 'linear-gradient(to right, #3b82f6, #ef4444)',
                     boxShadow: '2px 2px 10px rgba(0,0,0,0.3)',
                     transition: 'width 0.4s, border-radius 0.4s',
                     position: 'relative',
