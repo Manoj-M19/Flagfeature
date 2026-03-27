@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState} from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth-store'
 import CreateFlagModal from '@/components/create-flag-modal'
@@ -454,7 +454,7 @@ export default function ProjectDetailPage() {
               <h3 className="text-lg font-semibold text-white mb-2">{searchTerm ? 'No flags match your search' : 'No flags yet'}</h3>
               <p className="text-gray-400 text-sm mb-6">{searchTerm ? 'Try a different search term' : 'Create your first feature flag to get started'}</p>
               {!searchTerm && (
-                <button onClick={() => setIsModalOpen(true)} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium text-sm">
+                <button onClick={() => setIsModalOpen(true)} className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition font-medium text-sm cursor-pointer">
                   Create Your First Flag
                 </button>
               )}
