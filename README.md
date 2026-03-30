@@ -1,129 +1,191 @@
-<div align="center">
-<img src="public/screenshots/landing.png" alt="FlagFeature Landing Page" width="100%" style="border-radius: 12px" />
+# 🚀 FlagFeature
 
-FlagFeature
+> Production-grade feature flag platform built with Next.js 15.
+> Ship features safely. Roll out gradually. Never break production.
 
-Production-grade feature flag platform built with Next.js 15
-Ship features safely. Roll out gradually. Never break production.
+---
 
-📸 Screenshots
-<div align="center">
-Dashboard & Analytics
-<img src="public/screenshots/dashboard.png" alt="Dashboard" width="100%" style="border-radius: 8px; margin-bottom: 16px" />
-Feature Flag Management
-<img src="public/screenshots/flags.png" alt="Feature Flags" width="100%" style="border-radius: 8px; margin-bottom: 16px" />
-Audit Log
-<img src="public/screenshots/audit.png" alt="Audit Log" width="100%" style="border-radius: 8px" />
-</div>
+## 🌐 Live Demo
 
-What is FlagFeature?
-FlagFeature is a self-hosted feature flag management platform — similar to LaunchDarkly or Flagsmith — built entirely from scratch. It lets development teams safely ship features by controlling who sees what, without redeploying code.
-Instead of merging a feature and praying it works, you:
+🔗 https://flagfeature.vercel.app
 
-Deploy the code behind a flag (disabled by default)
-Enable it for 5% of users first
-Watch for errors — gradually increase to 100%
-If something breaks — disable in 1 click, no rollback needed
+---
 
-Feature                 Description
-Percentage Rollouts   Roll out to 5% → 50% → 100% using deterministic user hashing — no flickering
-Multi-Environment     Manage flags independently across development, staging, production
-Analytics Dashboard   14-day bar chart of flag activity + API key lastUsed tracking
-Audit Log             Every toggle, rollout change, flag deletion and member action is logged
-Team Management       Invite members with OWNER / ADMIN / MEMBER / VIEWER roles
-API Key Auth          Secure SDK endpoint with per-key usage tracking
-SDK Endpoint          Single GET returns all flag states in <10ms
-Flag Deletion         Safe delete with inline confirmation + audit trail
+## 📸 Screenshots
 
-Tech Stack
-Layer           Technology                 Why
-Framework       Next.js 15 App Router     Full-stack, edge-ready
-Language        TypeScript                Type safety end to end
-Database        PostgreSQL via Neon       Serverless, free tier
-ORM             Prisma                    Type-safe DB queries
-Auth            JWT + bcrypt              Simple, no vendor lock-in
-State           Zustand                   Lightweight client state
-Charts          Recharts                  Analytics visualization
-Styling         Tailwind CSS              Dark theme design system
-Deploy          Vercel                    ero-config deployment
+### Dashboard & Analytics
 
-🚀 Getting Started
-Prerequisites
-Node.js 18+
-A Neon account (free)
+![Dashboard](public/screenshot/dashboard.png)
 
-Local Development
-bash# 1. Clone the repo
+### Feature Flag Management
+
+![Flags](public/screenshot/landing.png)
+
+---
+
+## 🧠 What is FlagFeature?
+
+FlagFeature is a **self-hosted feature flag platform** (like LaunchDarkly or Flagsmith) built from scratch.
+
+It allows teams to ship features safely without redeploying code.
+
+### 🛠 How it works:
+
+* Deploy code behind a flag (disabled by default)
+* Enable for 5% of users
+* Monitor behavior
+* Gradually roll out to 100%
+* Instantly disable if something breaks
+
+---
+
+## ✨ Features
+
+* 🎯 **Percentage Rollouts**
+  Gradual rollout using deterministic user hashing (no flickering)
+
+* 🌍 **Multi-Environment Support**
+  Manage flags across development, staging, production
+
+* 📊 **Analytics Dashboard**
+  14-day activity tracking + API usage insights
+
+* 📝 **Audit Logs**
+  Track every change (toggle, delete, rollout updates)
+
+* 👥 **Team Management**
+  OWNER / ADMIN / MEMBER / VIEWER roles
+
+* 🔐 **API Key Authentication**
+  Secure SDK access with usage tracking
+
+* ⚡ **Fast SDK Endpoint**
+  Single request returns all flags in <10ms
+
+* 🗑 **Safe Flag Deletion**
+  Confirmation + audit trail
+
+---
+
+## 🛠 Tech Stack
+
+| Layer     | Technology              | Purpose        |
+| --------- | ----------------------- | -------------- |
+| Framework | Next.js 15 (App Router) | Full-stack app |
+| Language  | TypeScript              | Type safety    |
+| Database  | PostgreSQL (Neon)       | Serverless DB  |
+| ORM       | Prisma                  | DB queries     |
+| Auth      | JWT + bcrypt            | Authentication |
+| State     | Zustand                 | Client state   |
+| Charts    | Recharts                | Analytics      |
+| Styling   | Tailwind CSS            | UI design      |
+| Deploy    | Vercel                  | Hosting        |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Node.js 18+
+* Neon account
+
+### Installation
+
+```bash
 git clone https://github.com/Manoj-M19/flag-feature.git
 cd flag-feature
-
-# 2. Install dependencies
 npm install
+```
 
-# 3. Set up environment variables
+### Setup Environment
+
+```bash
 cp .env.example .env
-# Fill in DATABASE_URL and JWT_SECRET
+```
 
-# 4. Run migrations
+Add:
+
+```env
+DATABASE_URL="your_database_url"
+JWT_SECRET="your_secret"
+```
+
+### Run App
+
+```bash
 npx prisma migrate dev
-
-# 5. Start dev server
 npm run dev
+```
 
-Environment Variables
-env# Get from neon.tech → your project → connection string
-DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
+---
 
-# Generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-JWT_SECRET="your-64-char-hex-secret"
+## ⚡ SDK Usage
 
-⚡ SDK Integration
-Integrate feature flags into any project with a single fetch call:
+```bash
 GET /api/sdk/evaluate?projectId=YOUR_ID&environment=production&userId=user_123
 x-api-key: YOUR_API_KEY
+```
 
-React Hook
-import { useEffect, useState } from 'react'
+### React Hook Example
+
+```ts
+import { useEffect, useState } from "react";
 
 export function useFlags(userId: string) {
-  const [flags, setFlags] = useState<Record<string, boolean>>({})
+  const [flags, setFlags] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     fetch(
       `https://flagfeature.vercel.app/api/sdk/evaluate?projectId=${process.env.NEXT_PUBLIC_PROJECT_ID}&environment=production&userId=${userId}`,
-      { headers: { 'x-api-key': process.env.NEXT_PUBLIC_FLAG_API_KEY! } }
+      {
+        headers: {
+          "x-api-key": process.env.NEXT_PUBLIC_FLAG_API_KEY!,
+        },
+      }
     )
-      .then(r => r.json())
-      .then(data => setFlags(data.flags ?? {}))
-  }, [userId])
+      .then((r) => r.json())
+      .then((data) => setFlags(data.flags ?? {}));
+  }, [userId]);
 
-  return flags
+  return flags;
 }
+```
 
-// Usage — control any UI with a flag
-const flags = useFlags(user.id)
+---
 
-if (flags.new_checkout) return <NewCheckout />
-return <OldCheckout />
+## 🔢 Rollout Logic
 
-🔢 How Rollout Percentage Works
-userId: "user_abc" + flagKey: "new_ui"
-→ deterministic hash → 34
+```
+userId + flagKey → hash → number (0–100)
 
-rollout 10%  →  34 < 10?  ❌  user does NOT see the feature
-rollout 50%  →  34 < 50?  ✅  user sees the feature
-rollout 100% →  34 < 100? ✅  everyone sees the feature
+Example:
+hash = 34
 
-🌐 Deployment
-Vercel + Neon (Free)
+rollout 10% → ❌
+rollout 50% → ✅
+rollout 100% → ✅
+```
 
-👨‍💻 Author
-Manoj M
+---
 
-📄 License
-MIT © Manoj M
+## 🌐 Deployment
 
-<div align="center">
-Built with ❤️ using Next.js, Prisma, and PostgreSQL
-⭐ Star this repo if you found it useful!
-</div>
+* Vercel (Frontend + API)
+* Neon (PostgreSQL)
+
+---
+
+## 👨‍💻 Author
+
+**Manoj M**
+
+---
+
+## 📄 License
+
+MIT License © Manoj M
+
+---
+
+⭐ If you like this project, give it a star!
