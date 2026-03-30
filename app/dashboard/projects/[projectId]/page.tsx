@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth-store'
 import CreateFlagModal from '@/components/create-flag-modal'
@@ -50,23 +50,23 @@ interface Project {
 }
 
 const ENV_COLORS: Record<string, { tab: string; badge: string; dot: string }> = {
-  production:  { tab: 'border-red-500/60 text-red-400 bg-red-500/10',          badge: 'text-red-400 bg-red-500/10 border-red-500/30',         dot: 'bg-red-400'    },
-  staging:     { tab: 'border-yellow-500/60 text-yellow-400 bg-yellow-500/10', badge: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30', dot: 'bg-yellow-400' },
-  development: { tab: 'border-green-500/60 text-green-400 bg-green-500/10',    badge: 'text-green-400 bg-green-500/10 border-green-500/30',    dot: 'bg-green-400'  },
+  production: { tab: 'border-red-500/60 text-red-400 bg-red-500/10', badge: 'text-red-400 bg-red-500/10 border-red-500/30', dot: 'bg-red-400' },
+  staging: { tab: 'border-yellow-500/60 text-yellow-400 bg-yellow-500/10', badge: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30', dot: 'bg-yellow-400' },
+  development: { tab: 'border-green-500/60 text-green-400 bg-green-500/10', badge: 'text-green-400 bg-green-500/10 border-green-500/30', dot: 'bg-green-400' },
 }
 
 const ROLE_COLORS: Record<string, string> = {
-  OWNER:  'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
-  ADMIN:  'text-blue-400 bg-blue-500/10 border-blue-500/30',
+  OWNER: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30',
+  ADMIN: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
   MEMBER: 'text-gray-300 bg-gray-500/10 border-gray-500/30',
   VIEWER: 'text-gray-400 bg-gray-500/10 border-gray-500/20',
 }
 
 function getEnvTheme(name: string) {
   return ENV_COLORS[name.toLowerCase()] ?? {
-    tab:   'border-blue-500/60 text-blue-400 bg-blue-500/10',
+    tab: 'border-blue-500/60 text-blue-400 bg-blue-500/10',
     badge: 'text-blue-400 bg-blue-500/10 border-blue-500/30',
-    dot:   'bg-blue-400',
+    dot: 'bg-blue-400',
   }
 }
 
@@ -77,8 +77,8 @@ function getInitials(name: string | null, email: string) {
 
 function getRolloutColor(pct: number) {
   if (pct === 100) return 'bg-green-500'
-  if (pct >= 50)   return 'bg-blue-500'
-  if (pct >= 10)   return 'bg-yellow-500'
+  if (pct >= 50) return 'bg-blue-500'
+  if (pct >= 10) return 'bg-yellow-500'
   return 'bg-red-500'
 }
 
@@ -86,26 +86,27 @@ export default function ProjectDetailPage() {
   const params = useParams()
   const router = useRouter()
   const token = useAuthStore((state) => state.token)
-  const user  = useAuthStore((state) => state.user)
+  const user = useAuthStore((state) => state.user)
 
-  const [project, setProject]       = useState<Project | null>(null)
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState('')
+  const [project, setProject] = useState<Project | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [activeEnvId, setActiveEnvId] = useState<string | null>(null)
 
-  const [inviteEmail, setInviteEmail]     = useState('')
-  const [inviteRole, setInviteRole]       = useState('MEMBER')
+  const [inviteEmail, setInviteEmail] = useState('')
+  const [inviteRole, setInviteRole] = useState('MEMBER')
   const [inviteLoading, setInviteLoading] = useState(false)
-  const [inviteError, setInviteError]     = useState('')
+  const [inviteError, setInviteError] = useState('')
   const [inviteSuccess, setInviteSuccess] = useState('')
-  const [removingId, setRemovingId]       = useState<string | null>(null)
+  const [removingId, setRemovingId] = useState<string | null>(null)
 
   const [pendingRollout, setPendingRollout] = useState<Record<string, ReturnType<typeof setTimeout>>>({})
 
-  const [auditLogs, setAuditLogs]       = useState<AuditLog[]>([])
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
   const [auditLoading, setAuditLoading] = useState(false)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     if (params.projectId && token) {
@@ -165,20 +166,21 @@ export default function ProjectDetailPage() {
   }
 
   const ACTION_META: Record<string, { label: string; icon: string; color: string }> = {
-    FLAG_CREATED:    { label: 'Flag created',    icon: '🚩', color: 'text-blue-400 bg-blue-500/10 border-blue-500/30'       },
-    FLAG_TOGGLED:    { label: 'Flag toggled',    icon: '🔄', color: 'text-green-400 bg-green-500/10 border-green-500/30'     },
-    ROLLOUT_UPDATED: { label: 'Rollout updated', icon: '📊', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30'  },
-    MEMBER_INVITED:  { label: 'Member invited',  icon: '👤', color: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
-    MEMBER_REMOVED:  { label: 'Member removed',  icon: '🚫', color: 'text-red-400 bg-red-500/10 border-red-500/30'          },
+    FLAG_CREATED: { label: 'Flag created', icon: '🚩', color: 'text-blue-400 bg-blue-500/10 border-blue-500/30' },
+    FLAG_TOGGLED: { label: 'Flag toggled', icon: '🔄', color: 'text-green-400 bg-green-500/10 border-green-500/30' },
+    ROLLOUT_UPDATED: { label: 'Rollout updated', icon: '📊', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30' },
+    MEMBER_INVITED: { label: 'Member invited', icon: '👤', color: 'text-purple-400 bg-purple-500/10 border-purple-500/30' },
+    MEMBER_REMOVED: { label: 'Member removed', icon: '🚫', color: 'text-red-400 bg-red-500/10 border-red-500/30' },
+    FLAG_DELETED: { label: 'Flag deleted', icon: '🗑️', color: 'text-red-400 bg-red-500/10 border-red-500/30' },
   }
 
   function getAuditDescription(action: string, details: any): string {
     switch (action) {
-      case 'FLAG_CREATED':    return `Created flag "${details?.flagName}" (${details?.flagKey})`
-      case 'FLAG_TOGGLED':    return `${details?.to ? 'Enabled' : 'Disabled'} "${details?.flagName}" in ${details?.environment}`
+      case 'FLAG_CREATED': return `Created flag "${details?.flagName}" (${details?.flagKey})`
+      case 'FLAG_TOGGLED': return `${details?.to ? 'Enabled' : 'Disabled'} "${details?.flagName}" in ${details?.environment}`
       case 'ROLLOUT_UPDATED': return `Set "${details?.flagName}" rollout to ${details?.rolloutPercentage}% in ${details?.environment}`
-      case 'MEMBER_INVITED':  return `Invited ${details?.invitedEmail} as ${details?.role}`
-      case 'MEMBER_REMOVED':  return `Removed ${details?.removedEmail} from project`
+      case 'MEMBER_INVITED': return `Invited ${details?.invitedEmail} as ${details?.role}`
+      case 'MEMBER_REMOVED': return `Removed ${details?.removedEmail} from project`
       default: return action
     }
   }
@@ -186,10 +188,10 @@ export default function ProjectDetailPage() {
   function timeAgo(date: string): string {
     const diff = Date.now() - new Date(date).getTime()
     const mins = Math.floor(diff / 60000)
-    if (mins < 1)  return 'just now'
+    if (mins < 1) return 'just now'
     if (mins < 60) return `${mins}m ago`
     const hrs = Math.floor(mins / 60)
-    if (hrs < 24)  return `${hrs}h ago`
+    if (hrs < 24) return `${hrs}h ago`
     return `${Math.floor(hrs / 24)}d ago`
   }
 
@@ -318,14 +320,37 @@ export default function ProjectDetailPage() {
     finally { setRemovingId(null) }
   }
 
-  const activeEnv      = project?.environments.find((e) => e.id === activeEnvId)
-  const filteredFlags  = (project?.flags ?? []).filter((f) =>
+  const activeEnv = project?.environments.find((e) => e.id === activeEnvId)
+  const filteredFlags = (project?.flags ?? []).filter((f) =>
     f.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     f.key.toLowerCase().includes(searchTerm.toLowerCase())
   )
-  const enabledCount   = filteredFlags.filter((f) => f.states.find((s) => s.environment.id === activeEnvId)?.enabled).length
-  const currentMember  = project?.members.find((m) => m.user.id === user?.id)
-  const canManage      = currentMember && ['OWNER', 'ADMIN'].includes(currentMember.role)
+  const enabledCount = filteredFlags.filter((f) => f.states.find((s) => s.environment.id === activeEnvId)?.enabled).length
+  const currentMember = project?.members.find((m) => m.user.id === user?.id)
+  const canManage = currentMember && ['OWNER', 'ADMIN'].includes(currentMember.role)
+
+  const deleteFlag = async (flagId: string) => {
+    if (!confirm('Delete this flag? This cannot be undone.')) return
+    setDeletingId(flagId)
+    try {
+      const res = await fetch(`/api/projects/${params.projectId}/flags`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ flagId }),
+      })
+      if (res.ok) {
+        setProject((prev) => prev ? {
+          ...prev,
+          flags: prev.flags.filter(f => f.id !== flagId)
+        } : prev)
+        fetchAuditLogs()
+      }
+    } catch (err) {
+      console.error('Delete flag error:', err)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) return (
     <div className="min-h-screen bg-[#0D1117] flex items-center justify-center">
@@ -391,9 +416,8 @@ export default function ProjectDetailPage() {
               const flagsEnabled = project.flags.filter((f) => f.states.find((s) => s.environment.id === env.id)?.enabled).length
               return (
                 <button key={env.id} onClick={() => setActiveEnvId(env.id)}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${
-                    isActive ? `${theme.tab} shadow-sm` : 'text-gray-500 bg-transparent border-gray-800 hover:border-gray-600 hover:text-gray-300 cursor-pointer'
-                  }`}
+                  className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all ${isActive ? `${theme.tab} shadow-sm` : 'text-gray-500 bg-transparent border-gray-800 hover:border-gray-600 hover:text-gray-300 cursor-pointer'
+                    }`}
                 >
                   <span className={`w-2 h-2 rounded-full ${isActive ? theme.dot : 'bg-gray-700'}`} />
                   <span className="capitalize">{env.name}</span>
@@ -469,13 +493,16 @@ export default function ProjectDetailPage() {
                     <th className="text-center py-3.5 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                     <th className="text-left py-3.5 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider w-64">Rollout</th>
                     <th className="text-left py-3.5 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">Created</th>
+                    <th className="text-left py-3.5 px-6 text-xs font-semibold text-gray-500 uppercase tracking-wider">  Actions</th>
                   </tr>
                 </thead>
+
+
                 <tbody className="divide-y divide-gray-800">
                   {filteredFlags.map((flag) => {
-                    const state      = flag.states.find((s) => s.environment.id === activeEnvId)
-                    const isEnabled  = state?.enabled ?? false
-                    const rollout    = state?.rolloutPercentage ?? 100
+                    const state = flag.states.find((s) => s.environment.id === activeEnvId)
+                    const isEnabled = state?.enabled ?? false
+                    const rollout = state?.rolloutPercentage ?? 100
 
                     return (
                       <tr key={flag.id} className="hover:bg-[#0D1117]/60 transition-colors">
@@ -495,25 +522,24 @@ export default function ProjectDetailPage() {
                             </span>
                             <button
                               onClick={() => toggleFlag(flag.id, activeEnvId!, !isEnabled)}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
-                                isEnabled ? 'bg-green-500 cursor-pointer' : 'bg-gray-700 hover:bg-gray-600 cursor-pointer'
-                              }`}
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${isEnabled ? 'bg-green-500 cursor-pointer' : 'bg-gray-700 hover:bg-gray-600 cursor-pointer'
+                                }`}
                             >
                               <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 ${isEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
                             </button>
                           </div>
                         </td>
 
+
                         {/* Rollout slider */}
                         <td className="py-4 px-6">
                           <div className={`space-y-1.5 ${!isEnabled ? 'opacity-40 pointer-events-none' : ''}`}>
                             <div className="flex items-center justify-between">
                               <span className="text-xs text-gray-400">Rollout</span>
-                              <span className={`text-xs font-semibold font-mono ${
-                                rollout === 100 ? 'text-green-400' :
-                                rollout >= 50   ? 'text-blue-400'  :
-                                rollout >= 10   ? 'text-yellow-400': 'text-red-400'
-                              }`}>
+                              <span className={`text-xs font-semibold font-mono ${rollout === 100 ? 'text-green-400' :
+                                rollout >= 50 ? 'text-blue-400' :
+                                  rollout >= 10 ? 'text-yellow-400' : 'text-red-400'
+                                }`}>
                                 {rollout}%
                               </span>
                             </div>
@@ -545,10 +571,24 @@ export default function ProjectDetailPage() {
                         <td className="py-4 px-6 text-sm text-gray-500">
                           {new Date(flag.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </td>
+                        <td className="py-4 px-6">
+                          {canManage && (
+                            <button
+                              onClick={() => deleteFlag(flag.id)}
+                              disabled={deletingId === flag.id}
+                              className="text-xs text-red-500 hover:text-red-400 transition font-medium px-2.5 py-1.5 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20 disabled:opacity-50 cursor-pointer"
+                            >
+                              {deletingId === flag.id ? 'Deleting...' : 'Delete'}
+                            </button>
+                          )}
+                        </td>
                       </tr>
+
                     )
                   })}
+
                 </tbody>
+
               </table>
             </div>
           )}
@@ -597,7 +637,7 @@ export default function ProjectDetailPage() {
                   )}
                 </button>
               </form>
-              {inviteError   && <p className="mt-2 text-sm text-red-400">{inviteError}</p>}
+              {inviteError && <p className="mt-2 text-sm text-red-400">{inviteError}</p>}
               {inviteSuccess && <p className="mt-2 text-sm text-green-400">{inviteSuccess}</p>}
             </div>
           )}
@@ -623,7 +663,7 @@ export default function ProjectDetailPage() {
                   </span>
                   {canManage && member.role !== 'OWNER' && member.user.id !== user?.id && (
                     <button onClick={() => handleRemoveMember(member.id)} disabled={removingId === member.id}
-                      className="text-xs text-red-500 hover:text-red-400 transition font-medium px-2.5 py-1.5 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20 disabled:opacity-50"
+                      className="text-xs text-red-500 hover:text-red-400 transition font-medium px-2.5 py-1.5 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20 disabled:opacity-50 cursor-pointer"
                     >
                       {removingId === member.id ? 'Removing...' : 'Remove'}
                     </button>
